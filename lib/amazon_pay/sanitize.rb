@@ -4,7 +4,7 @@ module AmazonPay
   # Removes PII and other sensitive data for the logger
   class Sanitize
     def initialize(input_data)
-      @copy = input_data ? input_data.dup : ''
+      @copy = input_data ? input_data.dup.force_encoding("UTF-8") : ''
     end
 
     def sanitize_request_data
@@ -22,7 +22,7 @@ module AmazonPay
       ]
 
       patterns.each do |s|
-        @copy.gsub!(/([?|&]#{s}=)[^\&]+/ms, s + '=*REMOVED*')
+        @copy.gsub!(/([?|&]#{s}=)[^\&]+/mu, s + '=*REMOVED*')
       end
 
       @copy
@@ -32,14 +32,14 @@ module AmazonPay
       # Array of item to remove
 
       patterns = []
-      patterns.push(%r{(?<=<Buyer>).*(?=<\/Buyer>)}s)
-      patterns.push(%r{(?<=<PhysicalDestination>).*(?=<\/PhysicalDestination>)}ms)
-      patterns.push(%r{(?<=<BillingAddress>).*(?=<\/BillingAddress>)}s)
-      patterns.push(%r{(?<=<SellerNote>).*(?=<\/SellerNote>)}s)
-      patterns.push(%r{(?<=<AuthorizationBillingAddress>).*(?=<\/AuthorizationBillingAddress>)}s)
-      patterns.push(%r{(?<=<SellerAuthorizationNote>).*(?=<\/SellerAuthorizationNote>)}s)
-      patterns.push(%r{(?<=<SellerCaptureNote>).*(?=<\/SellerCaptureNote>)}s)
-      patterns.push(%r{(?<=<SellerRefundNote>).*(?=<\/SellerRefundNote>)}s)
+      patterns.push(%r{(?<=<Buyer>).*(?=<\/Buyer>)}u)
+      patterns.push(%r{(?<=<PhysicalDestination>).*(?=<\/PhysicalDestination>)}mu)
+      patterns.push(%r{(?<=<BillingAddress>).*(?=<\/BillingAddress>)}u)
+      patterns.push(%r{(?<=<SellerNote>).*(?=<\/SellerNote>)}u)
+      patterns.push(%r{(?<=<AuthorizationBillingAddress>).*(?=<\/AuthorizationBillingAddress>)}u)
+      patterns.push(%r{(?<=<SellerAuthorizationNote>).*(?=<\/SellerAuthorizationNote>)}u)
+      patterns.push(%r{(?<=<SellerCaptureNote>).*(?=<\/SellerCaptureNote>)}u)
+      patterns.push(%r{(?<=<SellerRefundNote>).*(?=<\/SellerRefundNote>)}u)
 
       patterns.each do |s|
         @copy.gsub!(s, '*REMOVED*')
