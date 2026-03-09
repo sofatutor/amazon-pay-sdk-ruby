@@ -92,11 +92,14 @@ module AmazonPay
       https.use_ssl = true
       https.verify_mode = OpenSSL::SSL::VERIFY_PEER
 
-      user_agent = { 'User-Agent' => "#{AmazonPay::SDK_NAME}/#{AmazonPay::VERSION}; (#{@application_name + '/' if @application_name}#{@application_version.to_s + ';' if @application_version} #{RUBY_VERSION}; #{RUBY_PLATFORM})" }
+      headers = {
+        'Content-Type' => 'application/x-www-form-urlencoded',
+        'User-Agent' => "#{AmazonPay::SDK_NAME}/#{AmazonPay::VERSION}; (#{@application_name + '/' if @application_name}#{@application_version.to_s + ';' if @application_version} #{RUBY_VERSION}; #{RUBY_PLATFORM})"
+      }
 
       tries = 0
       begin
-        response = https.post(uri.path, post_url, user_agent)
+        response = https.post(uri.path, post_url, headers)
         if @log_enabled
           data = AmazonPay::Sanitize.new(response.body)
           @logger.debug("response: #{data.sanitize_response_data}")
