@@ -39,6 +39,7 @@ class AmazonPayUnitTest < Minitest::Test
   HEADERS = {
     'Accept'=>'*/*',
     'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+    'Content-Type'=>'application/x-www-form-urlencoded',
     'User-Agent'=>"#{AmazonPay::SDK_NAME}/#{AmazonPay::VERSION}; (#{@application_name + '/' if @application_name }#{@application_version.to_s + ';' if @application_version} #{RUBY_VERSION}; #{RUBY_PLATFORM})"
   }
 
